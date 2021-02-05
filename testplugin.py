@@ -1,16 +1,16 @@
 import pynvim
-
-
+from pynvim import Nvim
 
 
 @pynvim.plugin
 class TestPlugin(object):
 
-    def __init__(self, nvim):
+    def __init__(self, nvim:Nvim):
         self.nvim = nvim
 
     @pynvim.function('TestFunction', sync=True)
     def testfunction(self, args):
+        self.nvim.out_write("5")
         return 5
 
     @pynvim.command('TestCommand', nargs='*', range='')
@@ -20,4 +20,23 @@ class TestPlugin(object):
 
     @pynvim.autocmd('BufEnter', pattern='*.py', eval='expand("<afile>")', sync=True)
     def on_bufenter(self, filename):
+        #result = self.nvim.api.strwidth("some text")
+
+        #self.nvim.out_write(str(result))
+
+        print("5")
+        length = self.nvim.request("nvim_buf_line_count", self.nvim.current.buffer)
+        with open("/tmp/log.txt", 'a') as file:
+            file.write(str(length))
         self.nvim.out_write('testplugin is in ' + filename + '\n')
+
+    @pynvim.autocmd('TextChanged', pattern='*.py', eval='expand("<afile>")', sync=True)
+    def on_bufenter(self, filename):
+        with open("/tmp/log.txt", 'a') as file:
+            file.write("Text changed")
+        self.nvim.out_write('testplugin is in ' + filename + '\n')
+
+    @pynvim.autocmd('TextChangedI', pattern='*.py', eval='expand("<afile>")', sync=True)
+    def on_bufenter(self, filename):
+        with open("/tmp/log.txt", 'a') as file:
+            file.write("Text changed with i")
