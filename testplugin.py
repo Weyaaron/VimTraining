@@ -34,6 +34,7 @@ def load_lines_from_txt() -> List[str]:
 @pynvim.plugin
 class TestPlugin(object):
     def __init__(self, nvim: Nvim):
+        self.count = 0
         self.nvim = nvim
         self.default_buffer_lines = load_lines_from_txt()
         pass
@@ -47,7 +48,7 @@ class TestPlugin(object):
         white_spaced_list = list(map(map_white_space, self.default_buffer_lines))
 
         min_length = 0
-        max_lenght = 20
+        max_lenght = 10
         lines = randrange(min_length, max_lenght)
         line_with_x = randrange(0, lines)
         print(lines, line_with_x)
@@ -59,21 +60,38 @@ class TestPlugin(object):
                 white_spaced_list.append("")
 
         self.nvim.api.buf_set_lines(
-            0, 0, len(white_spaced_list), False, white_spaced_list
+            0, 0, len(white_spaced_list)-1, False, white_spaced_list
         )
 
     @pynvim.autocmd(
         "CursorMoved", pattern="*.movement", eval='expand("<afile>")', sync=True
     )
     def cursor_moved(self, filename):
+
+        logger.info(self.nvim.current.line)
+
         if self.nvim.current.line == "x":
-            self.nvim.out_write("Hallo")
+            self.count += 1
+        else:
+            self.count = 0
+
+        lines = self.nvim.api.buf_get_lines(0,-2,-1, False)
+        linecount = self.nvim.api.buf_line_count(0)
+
+        self.nvim.api.buf_set_lines(
+            0, linecount-1,  linecount, False, [f"Current Count is {self.count}"]
+        )
+
+        logger.info(f"{lines}")
+
+
+
 
     @pynvim.autocmd(
         "BufEnter", pattern="*.movement", eval='expand("<afile>")', sync=True
     )
     def on_bufenter(self, filename):
-        pass
+        self.nvim.out_write("Hallo")
 
     @pynvim.autocmd(
         "TextChanged", pattern="*.movement", eval='expand("<afile>")', sync=True
