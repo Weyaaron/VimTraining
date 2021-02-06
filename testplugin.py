@@ -31,12 +31,12 @@ class TestPlugin(object):
         self.nvim.out_write('testplugin is in ' + filename + '\n')
 
     @pynvim.autocmd('TextChanged', pattern='*.py', eval='expand("<afile>")', sync=True)
-    def on_bufenter(self, filename):
+    def on_change(self, filename):
         with open("/tmp/log.txt", 'a') as file:
-            file.write("Text changed")
+            file.write("Text changed \n\n")
         self.nvim.out_write('testplugin is in ' + filename + '\n')
 
     @pynvim.autocmd('TextChangedI', pattern='*.py', eval='expand("<afile>")', sync=True)
-    def on_bufenter(self, filename):
+    def on_change_i(self, filename):
         with open("/tmp/log.txt", 'a') as file:
-            file.write("Text changed with i")
+            file.write("Text changed with i\n")
