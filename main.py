@@ -6,6 +6,9 @@ from typing import List
 import pynvim
 from pynvim import Nvim
 
+abs_path = Path("/home/aaron/Code/Python/VimTraining")
+
+
 
 from loguru import logger
 
@@ -13,7 +16,7 @@ from loguru import logger
 default_conf = {
     "handlers": [
         {"sink": sys.stdout},
-        {"sink": Path("/home/aaron/Code/Python/VimTraining/default.log")},
+        {"sink": abs_path.joinpath("./default.log")},
     ]
 }
 
@@ -22,7 +25,7 @@ logger.configure(**default_conf)
 
 def load_lines_from_txt() -> List[str]:
 
-    abs_file_path = Path("/buffers/default_buffer.txt")
+    abs_file_path = abs_path.joinpath(Path("./buffers/default_buffer.txt")).resolve()
     result = []
     with open(abs_file_path, "r") as file:
         for el in file.readlines():
