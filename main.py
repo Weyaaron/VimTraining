@@ -22,7 +22,7 @@ logger.configure(**default_conf)
 
 def load_lines_from_txt() -> List[str]:
 
-    abs_file_path = Path("/home/aaron/Code/Python/VimTraining/default_buffer.txt")
+    abs_file_path = Path("/buffers/default_buffer.txt")
     result = []
     with open(abs_file_path, "r") as file:
         for el in file.readlines():
