@@ -49,8 +49,10 @@ class TestPlugin(object):
 
         min_length = 0
         max_lenght = 10
-        lines = randrange(min_length, max_lenght)
-        line_with_x = randrange(0, lines)
+     #   lines = randrange(min_length, max_lenght)
+        lines = 10
+     #   line_with_x = randrange(0, lines)
+        line_with_x = 5
         print(lines, line_with_x)
 
         for i in range(0, lines):
@@ -107,5 +109,9 @@ class TestPlugin(object):
 
 
 if __name__ == "__main__":
-    test_obj = TestPlugin(None)
-    test_obj.set_buffer()
+    nvim = pynvim.attach('socket', path="/tmp/nvim.sock")
+
+    test_obj = TestPlugin(nvim)
+    test_obj.nvim.command('echo "hello world"')
+    while True:
+        pass
